@@ -1,0 +1,43 @@
+<% layout("/layouts/boilerplate") %>
+
+<!-- Success Flash Message -->
+<!-- <% if (success) { %>
+  <div class="alert alert-success">
+      
+       new message created
+  </div>
+<% } %> -->
+
+<!-- Error Flash Message (Optional) -->
+<!-- <% if (error) { %>
+  <div class="alert alert-danger">
+      Error Happend
+  </div>
+<% } %> -->
+
+<h3>All Listings</h3>
+
+<!-- Button to create a new listing -->
+<form method="GET" action="/listings/new">
+  <button class="btn btn-primary">Create New Listing</button>
+</form>
+
+<!-- Listings Display -->
+<div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-4">
+    <% for(let listing of allListings) { %>
+      <a href="/listings/<%= listing._id %>" class="listing-link">
+        <div class="card col listing-card">
+          <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_image" style="height: 20rem; object-fit: cover;" />
+          <div class="card-body" style="padding: 0;">
+            <p class="card-text">
+               <%= listing.title %> <br>
+               &#8377; <%= listing.price %> /night
+            </p>
+          </div>
+        </div>
+      </a>
+    <% } %>
+</div>
+
+
+
