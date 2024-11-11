@@ -1,7 +1,7 @@
 if(process.env.NODE_ENV != "production"){
     require("dotenv").config();
 }
-
+const MongoStore = require('connect-mongo');
 // Import necessary modules
 const express = require("express");
 const mongoose = require("mongoose");
@@ -39,16 +39,21 @@ async function main() {
 main();
 
 // Session configuration
-const sessionOptions = {
-    secret: "mysupersecretstring",
+app.use(session({
+    secret: 'mysupersecretkey', // Replace with your own secret
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: 'mongodb://127.0.0.1:27017/wanderlust' // Replace with your MongoDB URI
+    }),
     cookie: {
-        expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-        httpOnly: true
+      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Set to a Date object
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+      httpOnly: true
     }
-};
+  }));
+  
+
 
 // Middleware setup
 app.engine('ejs', ejsMate); // EJS Mate for layouts
@@ -59,7 +64,7 @@ app.use(methodOverride('_method')); // For overriding methods in form submission
 app.use(express.static(path.join(__dirname, "public"))); // For serving static files
 
 // Session and Flash
-app.use(session(sessionOptions));
+// app.use(session(sessionOptions));
 app.use(flash());
 
 // Passport configuration
